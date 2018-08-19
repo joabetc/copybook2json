@@ -4,11 +4,15 @@
   "description": "Transformar COPYBOOK (COBOL) em JSON.",
   "private": true,
   "scripts": {
-    "start": "node ./app.js"
+    "start": "node ./src/app.js",
+    "test": "mocha"
   },
   "author": "@douglaspands",
   "license": "ISC",
   "dependencies": {
     "lodash": "3.9.3"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }
