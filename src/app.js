@@ -11,15 +11,15 @@ var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
 // Obter arquivo
-var nomeArquivo = (fs.readdirSync('./input_file')[0] || '');
-var arqEnt = ((fs.readFileSync(path.join('./input_file', nomeArquivo), 'utf8')) || '');
+var nomeArquivo = (fs.readdirSync('./src/input_file')[0] || '');
+var arqEnt = ((fs.readFileSync(path.join('./src/input_file', nomeArquivo), 'utf8')) || '');
 // Arquivo tratado (gerar linhas de codigo do book)
 var linhasCodigo = book2lista(arqEnt);
 // GerarJson
 var codigoJson = copybook2json(linhasCodigo);
 // Gravar arquivo
 var arqSai = JSON.stringify(codigoJson.data, null, 4);
-fs.writeFileSync(path.join('./output_json/', (nomeArquivo.replace((/(\.)(.)+/g), '') + '.json')), arqSai, 'utf8');
+fs.writeFileSync(path.join('./src/output_json/', (nomeArquivo.replace((/(\.)(.)+/g), '') + '.json')), arqSai, 'utf8');
 // Fim
 console.log('Execução concluida!')
 console.timeEnd('Tempo gasto');
