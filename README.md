@@ -1,4 +1,4 @@
-# copybook2json <img src="https://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg" />
+# copybook2json <img src="https://img.shields.io/badge/Project%20Type-Product-brightgreen.svg" /> <img src="https://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg" />
 Transforms COPYBOOK (COBOL) into JSON.
 
 ## Requirements
