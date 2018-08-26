@@ -28,7 +28,7 @@ class CopyBook {
   _regexReplace(target, regex, newValue) {
     return target.replace(new RegExp(regex, 'g'), newValue);
   }
-  extractDeclarations(copyBookInput) {
+  _extractDeclarations(copyBookInput) {
     return this._arrayToLines(
       this._removeComments(
         this._linesToArray(copyBookInput)
@@ -36,7 +36,7 @@ class CopyBook {
     ).split('.');
   }
   bookToList(copyBookInput) {
-    let result = this.extractDeclarations(copyBookInput)
+    let result = this._extractDeclarations(copyBookInput)
       .reduce((acum, curr, key) => {
         let result = this._regexReplace(curr, '(\r\n)(\-)( )+(\')', '');
         result = this._regexReplace(result, '(\r\n)+', '');
