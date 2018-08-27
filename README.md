@@ -9,7 +9,7 @@ Dependencies installation:
 1. Access the `src` folder;
 2. Execute the command: `npm install`.  
 
-After dependencies installtion, execute the bellow commands:
+After dependencies installation, execute the bellow commands:
 1. Put the COPYBOOK file (any extension) in the folder `src/input`;
 2. Inside `src` folde, execute: `npm start`;
 3. The generated .json file will be in the folder `src/output`.
