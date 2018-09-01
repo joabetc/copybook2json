@@ -4,7 +4,7 @@ const LINE_BREAK = '\r\n';
 const BLANK_SPACE = ' ';
 
 class CopyBook {
-  _linesToArray(copybook, regex) {
+  _toArray(copybook, regex) {
     return copybook.split(regex);
   }
   _arrayToLines(array, regex) {
@@ -20,10 +20,10 @@ class CopyBook {
     return target.replace(new RegExp(regex, 'g'), newValue);
   }
   _extractDeclarations(copyBookInput) {
-    return this._linesToArray(
+    return this._toArray(
       this._arrayToLines(
         this._removeComments(
-          this._linesToArray(copyBookInput, LINE_BREAK)
+          this._toArray(copyBookInput, LINE_BREAK)
         ),
       LINE_BREAK
     ), '.');
@@ -57,7 +57,7 @@ class CopyBook {
     bookLine = this
       ._normalizeSpaces(bookLine)
       .trim();
-    bookLine = this._linesToArray(bookLine, BLANK_SPACE);
+    bookLine = this._toArray(bookLine, BLANK_SPACE);
     if (defaultValue) {
       regex = new RegExp('[\*]{3}', 'g');
       bookLine = bookLine.map((curr, key) => 
