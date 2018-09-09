@@ -5,8 +5,13 @@ var CPYGroupRedefines = require('./cpy-group-redefines');
 var CPYList = require('./cpy-list');
 
 class CPYFactory {
-  
-  constructor() { }
+
+  static getInstance() {
+    if(!CPYFactory.instance) {
+      CPYFactory.instance = new CPYFactory();
+    }
+    return CPYFactory.instance;
+  }
 
   _getType(pic, type = []) {
     if (['COMP', 'COMP-3'].includes(type)) {

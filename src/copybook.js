@@ -111,17 +111,17 @@ class CopyBook {
               k++;
           };
           newGroup = this.toJSON(itemsGroup, redefines(objNew, book[index][3]));
-          objNew = new CPYFactory().createGroupRedefines(book[index], newGroup);
+          objNew = CPYFactory.getInstance().createGroupRedefines(book[index], newGroup);
           lastPosition = (newGroup['length']);
           index = k - 1;
           break;
         // Tratamento de redefinição de variavel comum
         case (book[index].includes('REDEFINES') && book[index].includes('PIC')):
-          objNew = new CPYFactory().createItemRedefines(book[index]);
+          objNew = CPYFactory.getInstance().createItemRedefines(book[index]);
           break;
         // Tratamento de pictures
         case book[index].includes('PIC'):
-          objNew = new CPYFactory().createItem(book[index], lastPosition);
+          objNew = CPYFactory.getInstance().createItem(book[index], lastPosition);
           lastPosition += (lastPosition === 0) ? (objNew['length'] - 1) : objNew['length'];
           break;
         // Tratamento de listas
@@ -141,7 +141,7 @@ class CopyBook {
               newList.push(newGroup['data']);
               endOccurs = (newGroup['length']);
           }
-          objNew = new CPYFactory().createList(book[index], occursLine, newList, lastPosition, endOccurs)
+          objNew = CPYFactory.getInstance().createList(book[index], occursLine, newList, lastPosition, endOccurs)
           lastPosition = endOccurs;
           index = j - 1;
           break;
@@ -155,7 +155,7 @@ class CopyBook {
               k++;
           };
           newGroup = this.toJSON(itemsGroup, lastPosition);
-          objNew = new CPYFactory().createGroup(book[index], newGroup);
+          objNew = CPYFactory.getInstance().createGroup(book[index], newGroup);
           lastPosition = (newGroup['length']);
           index = k - 1;
           break;
