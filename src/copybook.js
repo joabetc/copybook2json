@@ -1,3 +1,5 @@
+const CPYFactory = require('./cpy-factory');
+
 const COMMENT_COLUMN_NUMBER = 6;
 const COMMENT_CHAR = '*';
 const LINE_BREAK = '\r\n';
@@ -109,32 +111,17 @@ class CopyBook {
               k++;
           };
           newGroup = this.toJSON(itemsGroup, redefines(objNew, book[index][3]));
-          objNew['name'] = fieldName;
-          objNew['copybook_name'] = fieldNameMainframe;
-          objNew['type'] = 'group';
-          objNew['redefines'] = this._snakeCase(book[index][3]);
-          objNew['data'] = newGroup['data'];
-          objNew['start'] = newGroup['start'];
-          objNew['length'] = newGroup['length'];
+          objNew = new CPYFactory().createGroupRedefines(book[index], newGroup);
           lastPosition = (newGroup['length']);
           index = k - 1;
           break;
         // Tratamento de redefinição de variavel comum
         case (book[index].includes('REDEFINES') && book[index].includes('PIC')):
-          objNew['name'] = fieldName;
-          objNew['copybook_name'] = fieldNameMainframe;
-          objNew['type'] = this._getType(book[index][5], ['COMP', 'COMP-3'].find(function (item) { return item === book[index][4] }));
-          objNew['redefines'] = this._snakeCase(book[index][3]);
-          objNew['start'] = (redefines(objNew, book[index][3]) + 1);
-          objNew['length'] = this._picture(book[index][5], ['COMP', 'COMP-3'].find(function (item) { return item === book[index][4] }));
+          objNew = new CPYFactory().createItemRedefines(book[index]);
           break;
         // Tratamento de pictures
         case book[index].includes('PIC'):
-          objNew['name'] = fieldName;
-          objNew['copybook_name'] = fieldNameMainframe;
-          objNew['type'] = this._getType(book[index][3], ['COMP', 'COMP-3'].find(function (item) { return item === book[index][4] }));
-          objNew['start'] = (lastPosition === 0) ? 0 : lastPosition + 1;
-          objNew['length'] = this._picture(book[index][3], ['COMP', 'COMP-3'].find(function (item) { return item === book[index][4] }));
+          objNew = new CPYFactory().createItem(book[index], lastPosition);
           lastPosition += (lastPosition === 0) ? (objNew['length'] - 1) : objNew['length'];
           break;
         // Tratamento de listas
@@ -154,13 +141,7 @@ class CopyBook {
               newList.push(newGroup['data']);
               endOccurs = (newGroup['length']);
           }
-          objNew['name'] = fieldName;
-          objNew['copybook_name'] = fieldNameMainframe;
-          objNew['type'] = 'list';
-          objNew['occurs'] = parseInt(occursLine[occursLine.indexOf('OCCURS') + 1], 10);
-          objNew['data'] = newList;
-          objNew['start'] = (lastPosition === 0) ? 0 : lastPosition + 1;
-          objNew['length'] = endOccurs;
+          objNew = new CPYFactory().createList(book[index], occursLine, newList, lastPosition, endOccurs)
           lastPosition = endOccurs;
           index = j - 1;
           break;
@@ -174,12 +155,7 @@ class CopyBook {
               k++;
           };
           newGroup = this.toJSON(itemsGroup, lastPosition);
-          objNew['name'] = fieldName;
-          objNew['copybook_name'] = fieldNameMainframe;
-          objNew['type'] = 'group';
-          objNew['data'] = newGroup['data'];
-          objNew['start'] = newGroup['start'];
-          objNew['length'] = newGroup['length'];
+          objNew = new CPYFactory().createGroup(book[index], newGroup);
           lastPosition = (newGroup['length']);
           index = k - 1;
           break;
@@ -221,7 +197,7 @@ class CopyBook {
             break;
     }
     return result;
-};
+  }
 }
 
 module.exports = new CopyBook();
