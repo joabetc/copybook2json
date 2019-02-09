@@ -67,7 +67,23 @@ class CopyBook {
       );
     }
     return bookLine;
+  }  
+  _snakeCase(value) {
+    return value.replace(/\-/g, "_").toLowerCase();
   }
+  _isEmpty(obj) {
+    for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  }
+
+  /**
+   * Generates a list of parameters list.
+   * @param {string} copyBookInput COPYBOOK COBOL.
+   * @return {array} Returns a list of parameters list from COPYBOOK.
+   */
   bookToList(copyBookInput) {
     let result = this._extractDeclarations(copyBookInput)
       .reduce((acum, curr, key) => {
@@ -81,16 +97,42 @@ class CopyBook {
     }, []);
     return result;
   }
-  _snakeCase(value) {
-    return value.replace(/\-/g, "_").toLowerCase();
-  }
-  _isEmpty(obj) {
-    for(var key in obj) {
-      if(obj.hasOwnProperty(key))
-        return false;
+  _getType(pic, type = []) {
+    if (['COMP', 'COMP-3'].includes(type)) {
+        return 'binary';
+    } else if ((/9/g).test(pic)) {
+        return 'number';
+    } else {
+        return 'string';
     }
-    return true;
   }
+  _picture(pic, type) {
+    var tam = pic.split('V').map(function (n) {
+        if (/\(/g.test(n)) return parseInt(n.replace(/(S?9\(|X\(|\)|\()/g, ''))
+        else return n.length;
+    });
+    var result = 0;
+    tam.forEach(function (c) { result += c });
+    switch (type) {
+        case 'COMP':
+            if (result < 5) result = 2;
+            else result = 4;
+            break;
+        case 'COMP-3':
+            result = Math.floor(result / 2) + 1;
+            break;
+        default:
+            break;
+    }
+    return result;
+  }
+
+  /**
+   * Converts the COPYBOOK to JSON
+   * @param {array} book COPYBOOK converted to array.
+   * @param {number} point Pointer for count start.
+   * @return {array} Returns a list of fields in JSON format.
+   */
   toJSON(book, point) {
     let startPoint = (point === undefined || point === 0) ? 0 : point + 1;
     let lastPosition = point >> 0;
@@ -168,35 +210,6 @@ class CopyBook {
       index++;
     };
     return { data: returnValue, start: startPoint, length: lastPosition };
-  }
-  _getType(pic, type = []) {
-    if (['COMP', 'COMP-3'].includes(type)) {
-        return 'binary';
-    } else if ((/9/g).test(pic)) {
-        return 'number';
-    } else {
-        return 'string';
-    }
-  }
-  _picture(pic, type) {
-    var tam = pic.split('V').map(function (n) {
-        if (/\(/g.test(n)) return parseInt(n.replace(/(S?9\(|X\(|\)|\()/g, ''))
-        else return n.length;
-    });
-    var result = 0;
-    tam.forEach(function (c) { result += c });
-    switch (type) {
-        case 'COMP':
-            if (result < 5) result = 2;
-            else result = 4;
-            break;
-        case 'COMP-3':
-            result = Math.floor(result / 2) + 1;
-            break;
-        default:
-            break;
-    }
-    return result;
   }
 }
 
