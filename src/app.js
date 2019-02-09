@@ -10,19 +10,28 @@ console.time('Tempo gasto');
 var fs = require('fs');
 var _ = require('lodash');
 var path = require('path');
+var copybook = require('./copybook');
 // Obter arquivo
 var nomeArquivo = (fs.readdirSync('./src/input_file')[0] || '');
 var arqEnt = ((fs.readFileSync(path.join('./src/input_file', nomeArquivo), 'utf8')) || '');
 // Arquivo tratado (gerar linhas de codigo do book)
-var linhasCodigo = book2lista(arqEnt);
+var linhasCodigo = copybook.bookToList(arqEnt);
+//var linhasCodigo = book2lista(arqEnt);
 // GerarJson
-var codigoJson = copybook2json(linhasCodigo);
+//var codigoJson = copybook2json(linhasCodigo);
+var codigoJson = copybook.toJSON(linhasCodigo);
 // Gravar arquivo
 var arqSai = JSON.stringify(codigoJson.data, null, 4);
 fs.writeFileSync(path.join('./src/output_json/', (nomeArquivo.replace((/(\.)(.)+/g), '') + '.json')), arqSai, 'utf8');
 // Fim
 console.log('Execução concluida!')
 console.timeEnd('Tempo gasto');
+
+var CPYItem = require('./cpy-item');
+var copyItem = new CPYItem('teste');
+copyItem.length = 10;
+console.log(JSON.stringify(copyItem));
+
 /**
  * Gera Lista de linhas, com listas de parametros.
  * @param {string} copybook COPYBOOK COBOL.
